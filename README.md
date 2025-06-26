@@ -1,5 +1,5 @@
 
-#  ATM Machine Simulator
+#  ATM Machine Simulation
 
 A simple and interactive ATM Machine Simulator built with JavaScript that mimics the core functionalities of a real-world ATM. This project demonstrates basic programming concepts such as user authentication, transaction handling, input validation, and UI interaction.
 
