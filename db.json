@@ -1,0 +1,39 @@
+{
+    "accounts": [
+        {
+            "cardNumber": "1234567890123456",
+            "pin": "1234",
+            "accountNumber": "987654321",
+            "accountHolder": "John Doe",
+            "balance": 2500.00
+        },
+        {
+            "cardNumber": "2345678901234567",
+            "pin": "2345",
+            "accountNumber": "876543219",
+            "accountHolder": "Jane Smith",
+            "balance": 1800.50
+        },
+        {
+            "cardNumber": "3456789012345678",
+            "pin": "3456",
+            "accountNumber": "765432198",
+            "accountHolder": "Robert Johnson",
+            "balance": 3200.75
+        },
+        {
+            "cardNumber": "4567890123456789",
+            "pin": "4567",
+            "accountNumber": "654321987",
+            "accountHolder": "Emily Davis",
+            "balance": 1500.25
+        },
+        {
+            "cardNumber": "5678901234567890",
+            "pin": "5678",
+            "accountNumber": "543219876",
+            "accountHolder": "Michael Wilson",
+            "balance": 4200.00
+        }
+    ]
+}
