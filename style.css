@@ -1,0 +1,65 @@
+:root {
+    --primary-color: #0056b3;
+    --secondary-color: #003366;
+    --accent-color: #00a8e8;
+    --light-color: #f0f8ff;
+    --dark-color: #002244;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  body {
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  .atm-container {
+    width: 100%;
+    max-width: 400px;
+    background: linear-gradient(135deg, #2c3e50, #4ca1af);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    position: relative;
+    padding: 20px;
+  }
+  
+  .atm-screen {
+    background-color: var(--light-color);
+    border-radius: 15px;
+    padding: 20px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .welcome-screen, .pin-screen, .menu-screen, .transaction-screen, .receipt-screen {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .welcome-screen h1 {
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    font-size: 24px;
+  }
+  
