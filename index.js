@@ -1,18 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // DOM Elements
-    // Mobile menu toggle
+
   document.querySelector('.navbar-toggle').addEventListener('click', function() {
     document.querySelector('.navbar-links').classList.toggle('active');
   });
   
-  // Close mobile menu when clicking on a link
+  
   document.querySelectorAll('.navbar-links a').forEach(link => {
     link.addEventListener('click', () => {
         document.querySelector('.navbar-links').classList.remove('active');
     });
   });
   
-  // Your existing ATM simulator code follows...
+  
     const welcomeScreen = document.getElementById('welcomeScreen');
     const pinScreen = document.getElementById('pinScreen');
     const menuScreen = document.getElementById('menuScreen');
@@ -31,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const receiptContent = document.getElementById('receiptContent');
     const atmCard = document.getElementById('atmCard');
     
-    // State variables
+    
     let currentCard = null;
     let enteredPin = '';
     let currentAccount = null;
@@ -39,13 +38,13 @@ document.addEventListener('DOMContentLoaded', function() {
     let transactionAmount = 0;
     let transferAccount = '';
     
-    // Event Listeners
+    
     insertCardBtn.addEventListener('click', insertCard);
     doneBtn.addEventListener('click', resetATM);
     confirmBtn.addEventListener('click', confirmTransaction);
     cancelBtn.addEventListener('click', cancelTransaction);
     
-    // Keypad handling
+    
     keypadKeys.forEach(key => {
         key.addEventListener('click', () => {
             const value = key.getAttribute('data-value');
@@ -62,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Menu buttons handling
+    
     menuButtons.forEach(button => {
         button.addEventListener('click', () => {
             const option = button.getAttribute('data-option');
@@ -70,19 +69,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Functions
+    
     function insertCard() {
-        // Simulate card insertion
+        
         atmCard.style.transform = 'translateY(-60px)';
         
-        // Fetch a random account from the database
+        
         fetch('db.json')
             .then(response => response.json())
             .then(data => {
                 const accounts = data.accounts;
                 currentCard = accounts[Math.floor(Math.random() * accounts.length)];
                 
-                // Show PIN screen after a delay
+                
                 setTimeout(() => {
                     welcomeScreen.style.display = 'none';
                     pinScreen.style.display = 'flex';
@@ -90,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Error loading accounts:', error);
-                // Fallback to a default account if DB fails
+                
                 currentCard = {
                     "cardNumber": "1234567890123456",
                     "pin": "1234",
@@ -156,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `;
                 
-                // Add event listeners to amount buttons
+                
                 document.querySelectorAll('.amount-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
                         const amount = this.getAttribute('data-amount');
@@ -170,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 });
                 
-                // Handle custom amount input
+                
                 document.getElementById('customAmount')?.addEventListener('input', function() {
                     transactionAmount = parseFloat(this.value) || 0;
                     updateWithdrawalConfirmation();
@@ -185,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="number" id="depositAmount" placeholder="Enter amount" min="1">
                 `;
                 
-                // Handle deposit amount input
+                
                 document.getElementById('depositAmount').addEventListener('input', function() {
                     transactionAmount = parseFloat(this.value) || 0;
                 });
@@ -201,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <input type="number" id="transferAmount" placeholder="Enter amount" min="1">
                 `;
                 
-                // Handle transfer inputs
+                
                 document.getElementById('recipientAccount').addEventListener('input', function() {
                     transferAccount = this.value;
                 });
@@ -216,4 +215,129 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
         }
     }
+    function updateWithdrawalConfirmation() {
+        const confirmationDiv = document.createElement('div');
+        confirmationDiv.className = 'withdrawal-confirmation';
+        
+        if (transactionAmount > currentAccount.balance) {
+            confirmationDiv.innerHTML = `
+                <p class="error">Insufficient funds. Your balance is $${currentAccount.balance.toFixed(2)}.</p>
+            `;
+        } else {
+            confirmationDiv.innerHTML = `
+                <p>You are about to withdraw: <strong>$${transactionAmount.toFixed(2)}</strong></p>
+                <p>Remaining balance will be: <strong>$${(currentAccount.balance - transactionAmount).toFixed(2)}</strong></p>
+            `;
+        }
+        
+        
+        const existingConfirmation = document.querySelector('.withdrawal-confirmation');
+        if (existingConfirmation) {
+            existingConfirmation.remove();
+        }
+        
+        transactionContent.appendChild(confirmationDiv);
+    }
     
+    function confirmTransaction() {
+        switch(currentTransaction) {
+            case 'balance':
+                generateReceipt(`
+                    <p>Transaction: Balance Inquiry</p>
+                    <p>Account: ${currentAccount.accountNumber}</p>
+                    <p>Available Balance: $${currentAccount.balance.toFixed(2)}</p>
+                    <p>Date: ${new Date().toLocaleString()}</p>
+                `);
+                break;
+                
+            case 'withdraw':
+                if (transactionAmount <= 0) {
+                    alert('Please enter a valid amount.');
+                    return;
+                }
+                
+                if (transactionAmount > currentAccount.balance) {
+                    alert('Insufficient funds.');
+                    return;
+                }
+                
+                currentAccount.balance -= transactionAmount;
+                generateReceipt(`
+                    <p>Transaction: Cash Withdrawal</p>
+                    <p>Account: ${currentAccount.accountNumber}</p>
+                    <p>Amount Withdrawn: $${transactionAmount.toFixed(2)}</p>
+                    <p>Remaining Balance: $${currentAccount.balance.toFixed(2)}</p>
+                    <p>Date: ${new Date().toLocaleString()}</p>
+                `);
+                break;
+                
+            case 'deposit':
+                if (transactionAmount <= 0) {
+                    alert('Please enter a valid amount.');
+                    return;
+                }
+                
+                currentAccount.balance += transactionAmount;
+                generateReceipt(`
+                    <p>Transaction: Cash Deposit</p>
+                    <p>Account: ${currentAccount.accountNumber}</p>
+                    <p>Amount Deposited: $${transactionAmount.toFixed(2)}</p>
+                    <p>New Balance: $${currentAccount.balance.toFixed(2)}</p>
+                    <p>Date: ${new Date().toLocaleString()}</p>
+                `);
+                break;
+                
+            case 'transfer':
+                if (!transferAccount || transactionAmount <= 0) {
+                    alert('Please enter valid account and amount.');
+                    return;
+                }
+                
+                if (transactionAmount > currentAccount.balance) {
+                    alert('Insufficient funds.');
+                    return;
+                }
+                
+                currentAccount.balance -= transactionAmount;
+                generateReceipt(`
+                    <p>Transaction: Funds Transfer</p>
+                    <p>From Account: ${currentAccount.accountNumber}</p>
+                    <p>To Account: ${transferAccount}</p>
+                    <p>Amount Transferred: $${transactionAmount.toFixed(2)}</p>
+                    <p>Remaining Balance: $${currentAccount.balance.toFixed(2)}</p>
+                    <p>Date: ${new Date().toLocaleString()}</p>
+                `);
+                break;
+        }
+        
+        transactionScreen.style.display = 'none';
+        receiptScreen.style.display = 'flex';
+    }
+    
+    function cancelTransaction() {
+        transactionScreen.style.display = 'none';
+        menuScreen.style.display = 'flex';
+        transactionAmount = 0;
+        transferAccount = '';
+    }
+    
+    function generateReceipt(content) {
+        receiptContent.innerHTML = content;
+    }
+    
+    function resetATM() {
+        
+        currentCard = null;
+        currentAccount = null;
+        enteredPin = '';
+        currentTransaction = null;
+        transactionAmount = 0;
+        transferAccount = '';
+        
+        
+        receiptScreen.style.display = 'none';
+        welcomeScreen.style.display = 'flex';
+        atmCard.style.transform = 'translateY(0)';
+        pinDisplay.textContent = '____';
+    }
+  });
